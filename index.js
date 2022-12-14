@@ -13,8 +13,10 @@
 
 /**
 참고
-https://devscb.tistory.com/70
-*/
+ https://devscb.tistory.com/70
+ https://wickedmagica.tistory.com/144
+ https://mycodings.fly.dev/blog/2022-07-30-how-to-handle-xpath-in-puppeteer
+ */
 
 const puppeteer = require('puppeteer');
 
@@ -22,11 +24,43 @@ const puppeteer = require('puppeteer');
     const browser = await puppeteer.launch({
         headless:false,
         executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+
     }); // puppeteer 시작
-    const page = await browser.newPage(); // 브라우저 실행
-    await page.goto('https://www.naver.com'); // 해당 페이지로 이동
-    await page.screenshot({
-        path: '1.png', fullPage:true
+    // const pages = await browser.newPage()
+    // const pages = await browser.pages()
+    const page = (await browser.pages())[0];//첫 번째 탭
+    try{
+        await page.goto('https://naver.com'); // 해당 페이지로 이동
+    }catch (e) {
+        const errorMsg = '오류 발생! \n 홈 페이지에 연결할 수 없습니다. 다시 확인 해주세요.'
+        throw Error('브라우저를 실행할 수 없습니다: ' + e);
+        console.log(errorMsg, e);
+    }
+
+    await page.bringToFront(); //탭 전환
+    await page.setViewport({
+        width: 1280, height: 1024
     });
-    await browser.close();  // 브라우저 종료
+    //await page.waitForNavigation();
+    await page.waitForSelector("#account > a");
+    try {
+        await page.click("#account > a");
+    } catch (e) {
+        let errorMsg = '오류 발생! \n 클릭할 수 없습니다.'
+        console.log(errorMsg, e);
+    }
+    try {
+        await page.$x("/html/body/div[1]/div[2]/div/div[1]/form/ul/li/div/div[1]/div[1]/input");
+        await page.type("#id", "tt");
+        await page.$x("/html/body/div[1]/div[2]/div/div[1]/form/ul/li/div/div[1]/div[2]/input");
+        await page.type("#pw", "t");
+    } catch (e) {
+        let errorMsg = '오류 발생! \n 입력불가!'
+        console.log(errorMsg, e);
+    }
+
+    await page.screenshot({
+        path: 'Screenshot/1.png', fullPage:false
+    });
+    //await browser.close();  // 브라우저 종료
 })();
