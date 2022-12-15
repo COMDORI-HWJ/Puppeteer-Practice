@@ -9,6 +9,8 @@
  * DATE              AUTHOR             NOTE
  * -----------------------------------------------------------
  * 2022/12/10        wj       최초 생성
+ * 2022/12/15        wj       네이버 자동 로그인 기능 추가
+ * 2022/12/16        wj       퍼피티어 함수 연습 및 마무리
  */
 
 /**
@@ -58,6 +60,11 @@ const puppeteer = require('puppeteer');
         let errorMsg = '오류 발생! \n 입력불가!'
         console.log(errorMsg, e);
     }
+    await page.goto("https://google.com");
+    await page.goBack();
+    await page.reload();
+    await page.goForward();
+
 
     await page.screenshot({
         path: 'Screenshot/1.png', fullPage:false
