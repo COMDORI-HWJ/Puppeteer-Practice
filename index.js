@@ -12,6 +12,7 @@
  * 2022/12/15        wj       네이버 자동 로그인 기능 추가
  * 2022/12/16        wj       퍼피티어 함수 연습 및 마무리
  * 2023/02/28        wj       빙 AI를 이용하여 퍼핏티어 학습
+ * 2023/03/01        wj       Bing AI를 이용하여 코딩 연습
  */
 
 /**
@@ -73,8 +74,8 @@ const puppeteer = require('puppeteer');
     await page.screenshot({ // 스크린샷
         path: 'Screenshot/1.png', fullPage:false
     });
-    await page.close();  // 브라우저 종료
-    await page.waitForTimeout(3000); // 네이버 아이디 입력전 대기
+    // await page.close();  // 페이지 종료
+    await browser.close(); // 브라우저 종료
 
 
     /*
@@ -89,14 +90,55 @@ puppeteer에서 사용하지 않는 페이지나 브라우저를 닫아주는 �
 더 자세한 내용은 Selenium 공식 문서를 참고하세요.
     */
 
-    const page2 = await browser.newPage();
-    const page3 = await browser.newPage();
 
+    // const browser2 = await puppeteer.launch({
+    //     headless:false,
+    // });
+    // const page2 = (await browser2.pages())[0];
+    // await page2.goto("https://apple.com");
+    //
+    // const page3 = await browser.newPage();
+    //
+    // await page3.close();
 
-    await page2.goto("https://apple.com");
-    await page3.close();
+    // async function browserOn() {
+    //     let browser;
+    //     try {
+    //         browser = await puppeteer.launch({
+    //                 headless:false,
+    //             });
+    //     } catch (e) {
+    //         throw Error("브라우저를 실행 할 수 없습니다: " + e);
+    //     }
+    //
+    //     let page2 = await browser.newPage()// 첫 번째 탭에서 시작.
+    //
+    // }
+    // await browserOn();
+    //
+    // await browserOn().goto("https://daum.net");
 
+    async function browserOn() {
+        let browser2;
+        try {
+            browser2 = await puppeteer.launch({
+                headless: false,
+            });
+        } catch (e) {
+            throw Error("브라우저를 실행할 수 없습니다: " + e);
+        }
 
+        const page2 = (await browser2.pages())[0];
+        // let page2 = await browser2.newPage(); // 첫 번째 탭에서 시작합니다.
 
+        // 브라우저와 page2 변수를 반환합니다.
+        return [browser2, page2];
+    }
+
+// browserOn() 함수를 호출하고 반환된 값을 변수에 할당합니다.
+    let [browser2, page2] = await browserOn();
+
+// 함수 밖에서 https://naver.com 페이지로 이동합니다.
+    await page2.goto("https://samsung.com");
 
 })();
