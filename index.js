@@ -13,6 +13,7 @@
  * 2022/12/16        wj       퍼피티어 함수 연습 및 마무리
  * 2023/02/28        wj       빙 AI를 이용하여 퍼핏티어 학습
  * 2023/03/01        wj       Bing AI를 이용하여 코딩 연습
+ * 2023/03/06        wj       외부 함수 사용 연습
  */
 
 /**
@@ -135,10 +136,24 @@ puppeteer에서 사용하지 않는 페이지나 브라우저를 닫아주는 �
         return [browser2, page2];
     }
 
-// browserOn() 함수를 호출하고 반환된 값을 변수에 할당합니다.
-    let [browser2, page2] = await browserOn();
+    async function ex1() {
+        let [browser2, page2] = await browserOn();
 
-// 함수 밖에서 https://naver.com 페이지로 이동합니다.
-    await page2.goto("https://samsung.com");
+        await page2.goto("https://samsung.com");
+        await browser2.close()
+
+    }
+
+    async function ex1_1() {
+        // browserOn() 함수를 호출하고 반환된 값을 변수에 할당합니다.
+        let [browser2, page2] = await browserOn();
+
+        // 함수 밖에서 페이지로 이동합니다.
+        await page2.goto("https://daum.net");
+        await browser2.close()
+    }
+
+    await ex1();
+    await ex1_1();
 
 })();
